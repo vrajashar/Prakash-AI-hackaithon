@@ -17,7 +17,7 @@ Navigation Assistance for the Visually Impaired
 🔧 Installation Steps
 
 Clone the Repository:
-git clone https://github.com/yourusername/Prakash-AI-Assistant.git
+git clone https://github.com/vrajashar/Prakash-AI-Assistant.git
 cd Prakash-AI-Assistant
 
 Install Dependencies:
