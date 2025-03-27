@@ -1,5 +1,5 @@
 from Frontend.GUI import (
-    GraphicalUserInterface,
+    VoiceAssistantGUI,  # Changed from GraphicalUserInterface
     SetAssistantStatus,
     ShowTextToScreen,
     TempDirectoryPath,
@@ -9,13 +9,14 @@ from Frontend.GUI import (
     GetMicrophoneStatus,
     GetAssistantStatus
 )
-
+from PyQt5.QtWidgets import QApplication
 from Backend.Model import FirstLayerDMM
 from Backend.RealtimeSearch import RealtimeSearchEngine
 from Backend.Automation import Automation
 from Backend.SpeechToText import SpeechRecognition
-from Backend.Chatbot import ChatBot
+from Backend.Chatbot import process_chatbot_query
 from Backend.TextToSpeech import TextToSpeech
+from Backend.ObjectDetect import ObjectDetection  # Import object detection module
 from dotenv import dotenv_values
 from asyncio import run
 from time import sleep
@@ -79,11 +80,14 @@ def InitialExecution():
 
 InitialExecution()
 
+object_detector = ObjectDetection()  # Initialize object detection module
+
 def MainExecution():
     TaskExecution = False
 
     SetAssistantStatus("Listening...")
     Query = SpeechRecognition()
+
     ShowTextToScreen(f"{Username} : {Query}")
     SetAssistantStatus("Thinking...")
     Decision = FirstLayerDMM(Query)
@@ -104,6 +108,18 @@ def MainExecution():
             if any(queries.startswith(func) for func in Functions):
                 run(Automation(list(Decision)))
                 TaskExecution = True
+    
+    
+    if any(phrase in Query.lower() for phrase in ["what is this object", "describe the object", "detect objects", "what am i looking at", "identify this", "what do you see", "analyze this", "recognize this object", "tell me what this is", "scan the object"]):
+        print("Activating object detection...")
+        detected_objects = object_detector.detect_objects()
+        if detected_objects:
+            response = f"Detected objects: {', '.join(detected_objects)}"
+        else:
+            response = "No objects detected."
+        ShowTextToScreen(f"{Assistantname} : {response}")
+        TextToSpeech(response)
+        return True
 
     if G and R or R:
         SetAssistantStatus("Searching ...")
@@ -118,7 +134,7 @@ def MainExecution():
             if "general" in Queries:
                 SetAssistantStatus("Thinking ...")
                 QueryFinal = Queries.replace("general ", "")
-                Answer = ChatBot(QueryModifier(QueryFinal))
+                Answer = process_chatbot_query(QueryModifier(QueryFinal))
                 ShowTextToScreen(f"{Assistantname} : {Answer}")
                 SetAssistantStatus("Answering...")
                 TextToSpeech(Answer)
@@ -135,35 +151,41 @@ def MainExecution():
 
             elif "exit" in Queries:
                 QueryFinal = "Okay, Bye!"
-                Answer = ChatBot(QueryModifier(QueryFinal))
+                Answer = process_chatbot_query(QueryModifier(QueryFinal))
                 ShowTextToScreen(f"{Assistantname} : {Answer}")
                 SetAssistantStatus("Answering ...")
                 TextToSpeech(Answer)
                 SetAssistantStatus("Answering ...")
                 os._exit(1)
 
+                
+
 def FirstThread():
-
     while True:
-
         CurrentStatus = GetMicrophoneStatus()
 
         if CurrentStatus == "True":
             MainExecution()
-
         else:
             AIStatus = GetAssistantStatus()
-
             if "Available..." in AIStatus:
                 sleep(0.1)
-
             else:
                 SetAssistantStatus("Available...")
 
 def SecondThread():
-    GraphicalUserInterface()
+    app = QApplication([])
+    window = VoiceAssistantGUI()
+    window.show()
+    app.exec_()
 
 if __name__ == "__main__":
     thread2 = threading.Thread(target=FirstThread, daemon=True)
     thread2.start()
     SecondThread()
+
+
+
+
+
+

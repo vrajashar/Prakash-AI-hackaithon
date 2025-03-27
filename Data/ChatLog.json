@@ -1,42 +1,26 @@
 [
     {
         "role": "user",
-        "content": "Hello good evening."
+        "content": "Sorry."
     },
     {
         "role": "assistant",
-        "content": "Good evening!"
+        "content": "No need to apologize! I'm here to help. What's your question or topic you'd like to discuss?"
     },
     {
         "role": "user",
-        "content": "What is the current weather in mumbai?"
+        "content": "Hello hello."
     },
     {
         "role": "assistant",
-        "content": "According to the search results, the current weather in Mumbai is:\n\n* 88\u00b0F (31\u00b0C) with hazy sunshine and a RealFeel of 88\u00b0F (31\u00b0C) as of 5:26 PM.\n* Alternatively, it's 85\u00b0F (29\u00b0C) with hazy sunshine and a RealFeel of 85\u00b0F (29\u00b0C) as of 6:29 PM.\n* There's also a moderate wind from NW (20 kph) with gusts up to 45 kph and an AQI of 180, which is moderately polluted.\n\nPlease note that these results might not be up-to-the-minute, but they should give you a general idea of the current weather in Mumbai."
+        "content": "Hello! How can I assist you today?"
     },
     {
         "role": "user",
-        "content": "Can you define what is artificial intelligence?"
+        "content": "Sorry."
     },
     {
         "role": "assistant",
-        "content": "Artificial intelligence (AI) refers to the development of computer systems that can perform tasks that typically require human intelligence, such as learning, problem-solving, decision-making, and perception. AI systems can analyze data, identify patterns, and make predictions or take actions without being explicitly programmed."
-    },
-    {
-        "role": "user",
-        "content": "Can you tell me the current stock price of tata motors?"
-    },
-    {
-        "role": "assistant",
-        "content": "According to the search results, the current stock price of Tata Motors is:\n\n* 702.95 (as of the last update)\n* 678.55 - 685.75 (day range)\n* 606.30 - 1,179.00 (52-week range)\n\nPlease note that stock prices can fluctuate rapidly and may have changed since the last update. For the most up-to-date information, I recommend checking a financial website or app."
-    },
-    {
-        "role": "user",
-        "content": "What is the current stock price of tata motors?"
-    },
-    {
-        "role": "assistant",
-        "content": "According to the search results, the current stock price of Tata Motors is \u20b9703."
+        "content": "No worries! It happens. Is there something on your mind that you'd like to talk about or ask? I'm all ears!"
     }
 ]

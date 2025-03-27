@@ -82,4 +82,3 @@ def TextToSpeech(Text, func=lambda r=None: True):
 if __name__ == "__main__":
     while True:
         TextToSpeech(input("Enter the text: "))
-

@@ -47,17 +47,26 @@ def extract_links(html):
     links = soup.find_all('a', {'jsname': 'UWckNb'})
     return [link.get('href') for link in links]
 
-def search_google(query, session):
-    """Perform a Google search and return HTML content."""
+import requests
+from bs4 import BeautifulSoup
+
+def search_google(query, session=None):
+    """Perform a Google search and return top search result links."""
+    if session is None:
+        session = requests.Session()  # Create a session if not provided
+
     url = f"https://www.google.com/search?q={query}"
-    headers = {"User-Agent": useragent}
-    
+    headers = {"User-Agent": "Mozilla/5.0"}
+
     response = session.get(url, headers=headers)
-    if response.status_code == 200:
-        return response.text
-    else:
-        print("❌ Failed to retrieve search results.")
-        return None
+    
+    if response.status_code != 200:
+        return {"error": "Failed to fetch search results"}
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    links = [a["href"] for a in soup.find_all("a", href=True) if "url?q=" in a["href"]]
+    
+    return links[:5]  # Return top 5 results
 
 def OpenApp(app, sess=requests.session()):
     """Opens an application or a website if the app is not found."""
@@ -156,3 +165,8 @@ async def Automation(commands):
     async for result in TranslateAndExecute(commands):
         pass
     return True
+
+def execute_command(commands):
+    """Wrapper function to run automation commands."""
+    import asyncio
+    return asyncio.run(Automation(commands))

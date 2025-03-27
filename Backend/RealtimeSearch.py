@@ -21,13 +21,26 @@ client = Groq(api_key=GroqAPIKey)
 System = """ """
 chat_log_path = os.path.join("Data", "ChatLog.json")
 # Try to load the chat log from a JSON file, or create an empty one if it doesn’t exist.
-try:
-    with open(chat_log_path, "r") as f:
-        chat_log = json.load(f)
-except (FileNotFoundError, json.JSONDecodeError):  # Handle missing or corrupt file
-    chat_log = []  # Default value if file doesn't exist or is empty
+import os
+import json
+
+# Get absolute path
+base_dir = os.path.dirname(os.path.abspath(__file__))  # Backend folder
+chat_log_path = os.path.join(base_dir, "..", "Data", "ChatLog.json")  # Adjusted path
+
+# Ensure file exists
+if not os.path.exists(chat_log_path) or os.path.getsize(chat_log_path) == 0:
     with open(chat_log_path, "w") as f:
-        json.dump(chat_log, f, indent=4)
+        json.dump([], f, indent=4)
+
+# Now read the file
+with open(chat_log_path, "r") as f:
+    try:
+        chat_log = json.load(f)
+    except json.JSONDecodeError:
+        chat_log = []
+        with open(chat_log_path, "w") as f:
+            json.dump(chat_log, f, indent=4)
 # Function to perform a Google search and format the results.
 def GoogleSearch(query):
     results = list(search(query, advanced=True, num_results=5))
